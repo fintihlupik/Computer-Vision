@@ -5,7 +5,7 @@ echo ====================================
 echo.
 
 REM Verificar si el entorno virtual existe
-if not exist venv (
+if not exist ..\venv (
     echo ❌ Entorno virtual no encontrado
     echo    Ejecuta setup.bat primero
     pause
@@ -13,7 +13,7 @@ if not exist venv (
 )
 
 REM Verificar si el archivo .env existe
-if not exist .env (
+if not exist ..\.env (
     echo ❌ Archivo .env no encontrado
     echo    Copia .env.example a .env y configura tus credenciales
     pause
@@ -21,7 +21,7 @@ if not exist .env (
 )
 
 echo 🔧 Activando entorno virtual...
-call venv\Scripts\activate.bat
+call ..\venv\Scripts\activate.bat
 
 echo 🚀 Iniciando servidor...
 echo.
@@ -31,4 +31,5 @@ echo.
 echo Presiona Ctrl+C para detener el servidor
 echo.
 
+cd ..
 python main.py

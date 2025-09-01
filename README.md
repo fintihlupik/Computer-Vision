@@ -14,14 +14,18 @@ cd FactoriaF5API
 
 **Windows:**
 ```cmd
-setup\setup.bat
+cd setup
+setup.bat
 ```
 
 **Linux/Mac:**
 ```bash
-chmod +x setup/setup.sh
-./setup/setup.sh
+cd setup
+chmod +x setup.sh
+./setup.sh
 ```
+
+> **⚠️ Importante**: Los scripts deben ejecutarse desde dentro de la carpeta `setup/`
 
 ### 3. Configurar Variables de Entorno
 1. Edita el archivo `.env` creado automáticamente
@@ -42,14 +46,18 @@ SUPABASE_SERVICE_ROLE=tu_clave_de_service_role
 
 **Windows:**
 ```cmd
-setup\run.bat
+cd setup
+run.bat
 ```
 
 **Linux/Mac:**
 ```bash
-chmod +x setup/run.sh
-./setup/run.sh
+cd setup
+chmod +x run.sh
+./run.sh
 ```
+
+> **📝 Nota sobre el modelo YOLO**: El proyecto incluye un modelo personalizado `best.pt`. Si no aparece en tu copia clonada, el sistema usará automáticamente el modelo YOLOv8n por defecto.
 
 ## 📋 Instalación Manual
 
@@ -83,6 +91,8 @@ mkdir -p temp/uploads temp/frames temp/crops
 # 6. Ejecutar servidor
 python main.py
 ```
+
+> **💡 Tip**: Para automatizar este proceso, usa los scripts en la carpeta `setup/`
 
 ## 🏗️ Estructura del Proyecto
 
@@ -278,6 +288,48 @@ python -m pytest tests/
 - [ ] Autenticación y autorización
 - [ ] Rate limiting
 - [ ] Métricas y monitoreo
+
+## 🛠️ Solución de Problemas
+
+### Error: "Modelo YOLO no encontrado: best.pt"
+
+**Posibles causas y soluciones:**
+
+1. **Ejecutar script desde ubicación incorrecta**
+   ```bash
+   # ❌ Incorrecto:
+   ./setup.bat
+   
+   # ✅ Correcto:
+   cd setup
+   ./setup.bat
+   ```
+
+2. **El modelo no está en el repositorio**
+   - El sistema usará automáticamente YOLOv8n como fallback
+   - Para usar un modelo personalizado, coloca `best.pt` en la raíz del proyecto
+
+3. **Verificar ubicación del modelo**
+   - El script mostrará la ruta donde busca el modelo
+   - Asegúrate de que `best.pt` esté en `FactoriaF5API/best.pt`
+
+### Error: "Este script debe ejecutarse desde la carpeta setup"
+```bash
+# Solución:
+cd setup
+./setup.bat  # Windows
+./setup.sh   # Linux/Mac
+```
+
+### Error de instalación de dependencias
+```bash
+# Si hay problemas con pip, actualiza primero:
+python -m pip install --upgrade pip
+
+# Luego ejecuta el setup nuevamente
+cd setup
+./setup.bat
+```
 
 ## 📝 Notas Técnicas
 
