@@ -291,6 +291,38 @@ python -m pytest tests/
 
 ## 🛠️ Solución de Problemas
 
+### Error: "no module named fastapi"
+
+**Causas y soluciones:**
+
+1. **El entorno virtual no está activado**
+   ```bash
+   # Los scripts run.bat/run.sh ya verifican esto automáticamente
+   # Si ves este error, ejecuta setup nuevamente:
+   cd setup
+   ./setup.bat   # Windows
+   ./setup.sh    # Linux/Mac
+   ```
+
+2. **Las dependencias no se instalaron correctamente**
+   ```bash
+   # Reinstalar dependencias:
+   cd setup
+   ./setup.bat   # Windows - reinstala automáticamente
+   ./setup.sh    # Linux/Mac - reinstala automáticamente
+   ```
+
+3. **Problema con el entorno virtual**
+   ```bash
+   # Eliminar y recrear entorno virtual:
+   rmdir /s venv      # Windows
+   rm -rf venv        # Linux/Mac
+   
+   # Luego ejecutar setup nuevamente
+   cd setup
+   ./setup.bat
+   ```
+
 ### Error: "Modelo YOLO no encontrado: best.pt"
 
 **Posibles causas y soluciones:**
@@ -329,6 +361,16 @@ python -m pip install --upgrade pip
 # Luego ejecuta el setup nuevamente
 cd setup
 ./setup.bat
+```
+
+### Error: "Entorno virtual no encontrado"
+```bash
+# El entorno virtual se debe crear desde la carpeta setup:
+cd setup
+./setup.bat   # Windows
+./setup.sh    # Linux/Mac
+
+# Los scripts verifican automáticamente todas las dependencias
 ```
 
 ## 📝 Notas Técnicas
