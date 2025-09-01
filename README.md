@@ -33,6 +33,7 @@ chmod +x setup.sh
 ```env
 SUPABASE_URL=tu_url_de_supabase
 SUPABASE_SERVICE_ROLE=tu_clave_de_service_role
+SUPABASE_KEY=tu_key
 ```
 
 ### 4. Configurar Base de Datos
