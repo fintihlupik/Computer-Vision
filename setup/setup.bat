@@ -49,6 +49,17 @@ if %errorlevel% neq 0 (
     echo ⚠️  Advertencia: No se pudo actualizar pip, continuando con la versión actual...
 )
 
+echo    Instalando setuptools y wheel para mejor compatibilidad...
+pip install --upgrade setuptools wheel
+
+echo    Instalando NumPy estable para Windows...
+pip install "numpy>=1.21.0,<1.25.0"
+if %errorlevel% neq 0 (
+    echo ❌ Error al instalar NumPy estable
+    echo    Intentando con versión de respaldo...
+    pip install "numpy==1.24.3"
+)
+
 echo    Instalando paquetes desde requirements.txt...
 pip install -r requirements.txt
 if %errorlevel% neq 0 (

@@ -291,6 +291,39 @@ python -m pytest tests/
 
 ## 🛠️ Solución de Problemas
 
+### Error: "CRASHES ARE TO BE EXPECTED" y warnings de NumPy MINGW-W64
+
+**Causa:** NumPy compilado con MINGW-W64 en Windows es experimental y puede causar problemas.
+
+**Síntomas:**
+```
+Warning: Numpy built with MINGW-W64 on Windows 64 bits is experimental
+CRASHES ARE TO BE EXPECTED - PLEASE REPORT THEM TO NUMPY DEVELOPERS
+RuntimeWarning: invalid value encountered in exp2
+```
+
+**Solución rápida:**
+```bash
+# Ejecutar el script de reparación:
+cd setup
+fix-numpy.bat
+
+# O reinstalar todo el entorno:
+Remove-Item -Recurse -Force ..\venv  # PowerShell
+setup.bat
+```
+
+**Solución manual:**
+```bash
+# Activar entorno virtual
+cd setup
+call ..\venv\Scripts\activate.bat
+
+# Reinstalar NumPy con versión estable
+pip uninstall -y numpy
+pip install "numpy>=1.21.0,<1.25.0"
+```
+
 ### Error: "Could not find a version that satisfies the requirement torch==2.3.1"
 
 **Causa:** La versión específica de PyTorch ya no está disponible en PyPI.
