@@ -291,6 +291,24 @@ python -m pytest tests/
 
 ## 🛠️ Solución de Problemas
 
+### ⚠️ Python 3.13 Compatibility Issues
+
+**Problema:** Si estás usando **Python 3.13** y ves errores como:
+```
+AttributeError: module 'pkgutil' has no attribute 'ImpImporter'
+Getting requirements to build wheel did not run successfully
+```
+
+**Causa:** Python 3.13 es muy nuevo y muchas librerías no tienen soporte completo.
+
+**Solución rápida:**
+```bash
+cd setup
+fix-python313.bat
+```
+
+**Recomendación:** Usa **Python 3.11 o 3.12** para mejor compatibilidad y estabilidad.
+
 ### Error: "CRASHES ARE TO BE EXPECTED" y warnings de NumPy MINGW-W64
 
 **Causa:** NumPy compilado con MINGW-W64 en Windows es experimental y puede causar problemas.

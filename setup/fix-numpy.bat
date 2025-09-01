@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 echo ====================================
 echo   Logo Detection API - Fix NumPy
 echo ====================================
@@ -26,27 +27,42 @@ if not exist ..\venv (
 echo 🔧 Activando entorno virtual...
 call ..\venv\Scripts\activate.bat
 
-echo 📦 Reparando instalación de NumPy...
+echo � Verificando versión de Python...
+python --version
+
+echo.
+echo �📦 Reparando instalación de NumPy para Python 3.13...
+
+REM Actualizar herramientas base (crítico para Python 3.13)
+echo    Actualizando pip, setuptools y wheel...
+python -m pip install --upgrade pip setuptools wheel
+
 echo    Desinstalando NumPy actual...
 pip uninstall -y numpy
 
-echo    Instalando NumPy estable para Windows...
-pip install "numpy>=1.21.0,<1.25.0"
+echo    Instalando NumPy compatible con Python 3.13...
+pip install "numpy>=1.26.0" --only-binary=numpy
+
 if %errorlevel% neq 0 (
-    echo ⚠️  Intentando con versión específica...
-    pip install "numpy==1.24.3"
+    echo ⚠️  Intentando instalación alternativa...
+    pip install numpy --force-reinstall --no-cache-dir
 )
 
 echo    Verificando instalación...
-python -c "import numpy; print('NumPy version:', numpy.__version__); print('NumPy compiled with:', numpy.show_config())" 2>nul
+python -c "import numpy; print('✅ NumPy version:', numpy.__version__)" 2>nul
 if %errorlevel% neq 0 (
     echo ❌ Error al verificar NumPy
+    echo.
+    echo 💡 El problema puede ser que Python 3.13 es muy nuevo
+    echo    Recomendaciones:
+    echo    1. Usar Python 3.11 o 3.12 para mejor compatibilidad
+    echo    2. Crear un nuevo entorno virtual con Python más estable
     pause
     exit /b 1
 )
 
 echo.
-echo ✅ NumPy reparado exitosamente
+echo ✅ NumPy reparado exitosamente para Python 3.13
 echo    Puedes ejecutar run.bat nuevamente
 echo.
 pause

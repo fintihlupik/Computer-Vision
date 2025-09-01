@@ -21,13 +21,29 @@ if not exist .. (
     exit /b 1
 )
 
-REM Verificar si Python está instalado
+REM Verificar si Python está instalado y su versión
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ Python no está instalado o no está en el PATH
     echo    Por favor instala Python 3.8+ desde https://python.org
     pause
     exit /b 1
+)
+
+REM Mostrar versión de Python y advertir sobre Python 3.13
+for /f "tokens=2" %%i in ('python --version') do set PYTHON_VERSION=%%i
+echo 🐍 Python detectado: %PYTHON_VERSION%
+
+echo %PYTHON_VERSION% | findstr "3.13" >nul
+if %errorlevel% equ 0 (
+    echo.
+    echo ⚠️  ADVERTENCIA: Python 3.13 detectado
+    echo    Algunas librerías pueden tener problemas de compatibilidad
+    echo    Recomendamos Python 3.11 o 3.12 para mejor estabilidad
+    echo.
+    echo    Si tienes problemas, usa: fix-python313.bat
+    echo.
+    pause
 )
 
 echo ✅ Python encontrado:
