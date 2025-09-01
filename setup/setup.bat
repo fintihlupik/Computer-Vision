@@ -43,8 +43,26 @@ call ..\venv\Scripts\activate.bat
 
 echo.
 echo 📥 Instalando dependencias...
-pip install --upgrade pip
+echo    Actualizando pip...
+python -m pip install --upgrade pip
+if %errorlevel% neq 0 (
+    echo ⚠️  Advertencia: No se pudo actualizar pip, continuando con la versión actual...
+)
+
+echo    Instalando paquetes desde requirements.txt...
 pip install -r requirements.txt
+if %errorlevel% neq 0 (
+    echo ❌ Error al instalar dependencias
+    echo    Verifica tu conexión a internet y que no haya conflictos
+    echo    Intenta ejecutar manualmente: pip install -r requirements.txt
+    echo.
+    echo    Si persiste el error, prueba instalar PyTorch manualmente:
+    echo    pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+    pause
+    exit /b 1
+)
+
+echo ✅ Dependencias instaladas correctamente
 
 echo.
 echo 📋 Configurando variables de entorno...

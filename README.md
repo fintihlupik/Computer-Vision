@@ -291,6 +291,22 @@ python -m pytest tests/
 
 ## 🛠️ Solución de Problemas
 
+### Error: "Could not find a version that satisfies the requirement torch==2.3.1"
+
+**Causa:** La versión específica de PyTorch ya no está disponible en PyPI.
+
+**Solución:**
+```bash
+# El requirements.txt ya está actualizado con versiones compatibles
+# Simplemente ejecuta setup nuevamente:
+cd setup
+./setup.bat   # Windows
+./setup.sh    # Linux/Mac
+
+# Si persiste el problema, instala PyTorch manualmente:
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
+
 ### Error: "no module named fastapi"
 
 **Causas y soluciones:**

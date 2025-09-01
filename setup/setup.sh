@@ -40,8 +40,27 @@ source ../venv/bin/activate
 
 echo
 echo "📥 Instalando dependencias..."
+echo "   Actualizando pip..."
 pip install --upgrade pip
+if [ $? -ne 0 ]; then
+    echo "❌ Error al actualizar pip"
+    echo "   Intenta ejecutar manualmente: python3 -m pip install --upgrade pip"
+    exit 1
+fi
+
+echo "   Instalando paquetes desde requirements.txt..."
 pip install -r requirements.txt
+if [ $? -ne 0 ]; then
+    echo "❌ Error al instalar dependencias"
+    echo "   Verifica tu conexión a internet y que no haya conflictos"
+    echo "   Intenta ejecutar manualmente: pip install -r requirements.txt"
+    echo
+    echo "   Si persiste el error, prueba instalar PyTorch manualmente:"
+    echo "   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu"
+    exit 1
+fi
+
+echo "✅ Dependencias instaladas correctamente"
 
 echo
 echo "📋 Configurando variables de entorno..."
