@@ -13,7 +13,7 @@ async def get_all_detections():
         response = supabase_client.client.table('detections')\
             .select('''
                 *,
-                brands(name),
+                brands!inner(name),
                 frame_captures(public_url, path, frame_number)
             ''')\
             .order('created_at', desc=True)\
@@ -51,7 +51,7 @@ async def get_detections(file_id: int):
         response = supabase_client.client.table('detections')\
             .select('''
                 *,
-                brands(name),
+                brands!inner(name),
                 frame_captures(public_url, path, frame_number)
             ''')\
             .eq('file_id', file_id)\
@@ -87,7 +87,7 @@ async def get_predictions(file_id: int):
     """Get all predictions for a file"""
     try:
         response = supabase_client.client.table('predictions')\
-            .select('*, brands(name)')\
+            .select('*, brands!inner(name)')\
             .eq('video_id', file_id)\
             .execute()
         
@@ -137,4 +137,91 @@ async def get_all_frame_captures():
         return {"frame_captures": response.data}
     except Exception as e:
         logger.error(f"Error getting all frame captures: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/stats")
+async def get_dashboard_stats():
+    """Get overall dashboard statistics"""
+    try:
+        # Get total files count
+        files_response = supabase_client.client.table('files')\
+            .select('id', count='exact')\
+            .execute()
+        total_files = files_response.count or 0
+        
+        # Get total detections count
+        detections_response = supabase_client.client.table('detections')\
+            .select('id', count='exact')\
+            .execute()
+        total_detections = detections_response.count or 0
+        
+        # Get unique brands count
+        brands_response = supabase_client.client.table('brands')\
+            .select('id', count='exact')\
+            .execute()
+        total_brands = brands_response.count or 0
+        
+        # Get recent uploads (last 7 days)
+        from datetime import datetime, timedelta
+        seven_days_ago = (datetime.now() - timedelta(days=7)).isoformat()
+        recent_files_response = supabase_client.client.table('files')\
+            .select('id', count='exact')\
+            .gte('created_at', seven_days_ago)\
+            .execute()
+        recent_uploads = recent_files_response.count or 0
+        
+        return {
+            "total_files": total_files,
+            "total_detections": total_detections,
+            "total_brands": total_brands,
+            "recent_uploads": recent_uploads
+        }
+    except Exception as e:
+        logger.error(f"Error getting dashboard stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/brand-stats")
+async def get_brand_stats():
+    """Get brand statistics for dashboard"""
+    try:
+        # Get brands with their detection counts and average confidence
+        # Join detections with brands to get brand names
+        response = supabase_client.client.table('detections')\
+            .select('''
+                score,
+                brands!inner(name)
+            ''')\
+            .execute()
+        
+        # Process the data to calculate statistics per brand
+        brand_stats = {}
+        for detection in response.data:
+            if detection['brands'] and detection['brands']['name']:
+                brand_name = detection['brands']['name']
+                score = detection['score']
+                
+                if brand_name not in brand_stats:
+                    brand_stats[brand_name] = {
+                        'detection_count': 0,
+                        'total_confidence': 0.0
+                    }
+                
+                brand_stats[brand_name]['detection_count'] += 1
+                brand_stats[brand_name]['total_confidence'] += float(score)
+        
+        # Calculate averages and format response
+        brands = []
+        for brand_name, stats in brand_stats.items():
+            brands.append({
+                'brand_name': brand_name,
+                'detection_count': stats['detection_count'],
+                'confidence_avg': stats['total_confidence'] / stats['detection_count']
+            })
+        
+        # Sort by detection count (descending)
+        brands.sort(key=lambda x: x['detection_count'], reverse=True)
+        
+        return {"brands": brands}
+    except Exception as e:
+        logger.error(f"Error getting brand stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
